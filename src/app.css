@@ -1,0 +1,10 @@
+body {
+    padding: 24px;
+}
+
+.react-codemirror2 {
+    height: calc(100vh - 164px);
+}
+.CodeMirror {
+    height: 100% !important;
+}
