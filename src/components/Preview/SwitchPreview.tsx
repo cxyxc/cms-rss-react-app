@@ -3,6 +3,7 @@ import { PreviewInfo } from './interfaces'
 import { useForm, usePlugin } from 'tinacms'
 import SwaggerPreview from './SwaggerPreview'
 import { Center, Heading } from '@chakra-ui/layout'
+import RssPreview from './RssPreview'
 
 interface Props {
     data: PreviewInfo
@@ -44,8 +45,14 @@ export default function SwitchPreview(props: Props) {
     }
     const [currentData, currentForm] = useForm<PreviewInfo>(formConfig)
     usePlugin(currentForm)
+    console.log(currentData)
 
-    if (currentData.type === 'swagger') return <SwaggerPreview data={currentData} />
-
-    return defaultPreview
+    switch (currentData.type) {
+        case 'swagger':
+            return <SwaggerPreview data={currentData} />
+        case 'rss':
+            return <RssPreview data={currentData} />
+        default:
+            return defaultPreview;
+    }
 }

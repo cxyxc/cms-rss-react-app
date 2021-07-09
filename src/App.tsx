@@ -9,6 +9,23 @@ import { nanoid } from 'nanoid';
 
 function Home() {
   const setGlobalList = useSetRecoilState(globalListState);
+  const createGlobalData = (values, type) => {
+    console.log(values, type)
+    const result: PreviewInfo = {
+      ...values,
+      id: values.title + nanoid(),
+      type,
+      time: new Date().toUTCString()
+    }
+    // 内存修改 + 持久化
+    setGlobalList(state => {
+      const globalList = state.concat(result)
+      // TODO: 持久化方案调整
+      localStorage.setItem('globalList', JSON.stringify(globalList))
+      return state.concat(result)
+    })
+    return Promise.resolve()
+  }
 
   const cms = new TinaCMS({
     sidebar: true,
@@ -17,22 +34,10 @@ function Home() {
 
   // 添加 API
   cms.registerApi('swagger', {
-    create: (values) => {
-      const result: PreviewInfo = {
-        ...values,
-        id: nanoid(),
-        type: 'swagger',
-        time: new Date().toUTCString()
-      }
-      // 内存修改 + 持久化
-      setGlobalList(state => {
-        const globalList = state.concat(result)
-        // TODO: 持久化方案调整
-        localStorage.setItem('globalList', JSON.stringify(globalList))
-        return state.concat(result)
-      })
-      return Promise.resolve()
-    }
+    create: (values) => createGlobalData(values, 'swagger')
+  })
+  cms.registerApi('rss', {
+    create: (values) => createGlobalData(values, 'rss')
   })
 
   return (

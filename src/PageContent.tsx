@@ -37,6 +37,14 @@ const RSSReaderCreatorPlugin = {
   name: 'Add New RSSReader',
   fields: [
     {
+      label: 'Title',
+      name: 'title',
+      component: 'text',
+      validate(title) {
+        if (!title) return "Required."
+      }
+    },
+    {
       label: 'RSS URL',
       name: 'url',
       component: 'text',
